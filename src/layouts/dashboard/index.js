@@ -1,146 +1,102 @@
-// @mui material components
+import { useState } from "react";
 import Grid from "@mui/material/Grid";
-
-// Material Dashboard 2 React components
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import Typography from "@mui/material/Typography";
 import MDBox from "components/MDBox";
-
-// Material Dashboard 2 React example components
+import MDInput from "components/MDInput";
+import MDButton from "components/MDButton";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
-import Footer from "examples/Footer";
-import ReportsBarChart from "examples/Charts/BarCharts/ReportsBarChart";
-import ReportsLineChart from "examples/Charts/LineCharts/ReportsLineChart";
-import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatisticsCard";
-
-// Data
-import reportsBarChartData from "layouts/dashboard/data/reportsBarChartData";
-import reportsLineChartData from "layouts/dashboard/data/reportsLineChartData";
-
-// Dashboard components
-import Projects from "layouts/dashboard/components/Projects";
-import OrdersOverview from "layouts/dashboard/components/OrdersOverview";
+import { searchRestaurants } from "services/restaurantService";
 
 function Dashboard() {
-  const { sales, tasks } = reportsLineChartData;
+  const [query, setQuery] = useState("");
+  const [location, setLocation] = useState("");
+  const [results, setResults] = useState([]);
+
+  const handleSearch = async () => {
+    try {
+      const response = await searchRestaurants(query, location);
+      setResults(response.data.results);
+    } catch (error) {
+      console.error("Error en la búsqueda:", error);
+    }
+  };
 
   return (
     <DashboardLayout>
       <DashboardNavbar />
       <MDBox py={3}>
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={6} lg={3}>
-            <MDBox mb={1.5}>
-              <ComplexStatisticsCard
-                color="dark"
-                icon="weekend"
-                title="Bookings"
-                count={281}
-                percentage={{
-                  color: "success",
-                  amount: "+55%",
-                  label: "than lask week",
-                }}
-              />
-            </MDBox>
+        {/* Contenedor de Búsqueda */}
+        <Grid container spacing={2} justifyContent="center" alignItems="center">
+          <Grid item>
+            <MDInput
+              type="text"
+              label="Consulta (Ej: Pizza)"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+            />
           </Grid>
-          <Grid item xs={12} md={6} lg={3}>
-            <MDBox mb={1.5}>
-              <ComplexStatisticsCard
-                icon="leaderboard"
-                title="Today's Users"
-                count="2,300"
-                percentage={{
-                  color: "success",
-                  amount: "+3%",
-                  label: "than last month",
-                }}
-              />
-            </MDBox>
+          <Grid item>
+            <MDInput
+              type="text"
+              label="Ubicación (Ej: Cartagena)"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+            />
           </Grid>
-          <Grid item xs={12} md={6} lg={3}>
-            <MDBox mb={1.5}>
-              <ComplexStatisticsCard
-                color="success"
-                icon="store"
-                title="Revenue"
-                count="34k"
-                percentage={{
-                  color: "success",
-                  amount: "+1%",
-                  label: "than yesterday",
-                }}
-              />
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={3}>
-            <MDBox mb={1.5}>
-              <ComplexStatisticsCard
-                color="primary"
-                icon="person_add"
-                title="Followers"
-                count="+91"
-                percentage={{
-                  color: "success",
-                  amount: "",
-                  label: "Just updated",
-                }}
-              />
-            </MDBox>
+          <Grid item>
+            <MDButton variant="gradient" color="info" onClick={handleSearch}>
+              Buscar
+            </MDButton>
           </Grid>
         </Grid>
-        <MDBox mt={4.5}>
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={6} lg={4}>
-              <MDBox mb={3}>
-                <ReportsBarChart
-                  color="info"
-                  title="website views"
-                  description="Last Campaign Performance"
-                  date="campaign sent 2 days ago"
-                  chart={reportsBarChartData}
-                />
-              </MDBox>
+
+        {/* Lista de Resultados */}
+        <MDBox mt={4}>
+          <Typography variant="h5" gutterBottom textAlign="center">
+            Resultados de la Búsqueda
+          </Typography>
+
+          {results.length === 0 ? (
+            <Typography variant="body1" textAlign="center">
+              No hay resultados disponibles
+            </Typography>
+          ) : (
+            <Grid container spacing={3}>
+              {results.map((place) => (
+                <Grid item xs={12} sm={6} md={4} key={place.place_id}>
+                  <Card sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
+                    {/* Imagen del restaurante (si existe) */}
+                    {place.photos && place.photos.length > 0 && (
+                      <CardMedia
+                        component="img"
+                        height="200"
+                        image={`https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${place.photos[0].photo_reference}&key=TU_API_KEY`}
+                        alt={place.name}
+                      />
+                    )}
+
+                    <CardContent>
+                      <Typography variant="h6" fontWeight="bold">
+                        {place.name}
+                      </Typography>
+                      <Typography variant="body2" color="textSecondary">
+                        📍 {place.formatted_address}
+                      </Typography>
+                      <Typography variant="body2" color="textSecondary">
+                        ⭐ {place.rating} ({place.user_ratings_total} reseñas)
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              ))}
             </Grid>
-            <Grid item xs={12} md={6} lg={4}>
-              <MDBox mb={3}>
-                <ReportsLineChart
-                  color="success"
-                  title="daily sales"
-                  description={
-                    <>
-                      (<strong>+15%</strong>) increase in today sales.
-                    </>
-                  }
-                  date="updated 4 min ago"
-                  chart={sales}
-                />
-              </MDBox>
-            </Grid>
-            <Grid item xs={12} md={6} lg={4}>
-              <MDBox mb={3}>
-                <ReportsLineChart
-                  color="dark"
-                  title="completed tasks"
-                  description="Last Campaign Performance"
-                  date="just updated"
-                  chart={tasks}
-                />
-              </MDBox>
-            </Grid>
-          </Grid>
-        </MDBox>
-        <MDBox>
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={6} lg={8}>
-              <Projects />
-            </Grid>
-            <Grid item xs={12} md={6} lg={4}>
-              <OrdersOverview />
-            </Grid>
-          </Grid>
+          )}
         </MDBox>
       </MDBox>
-      <Footer />
     </DashboardLayout>
   );
 }
