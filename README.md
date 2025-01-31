@@ -51,3 +51,16 @@ npm start
 ```
 
 #### Esto abrirá la aplicación en http://localhost:3000.
+
+Login
+![alt text](image.png)
+
+Create User
+![alt text](image-1.png)
+
+Serch Restaurant
+![alt text](image-2.png)
+![alt text](image-3.png)
+
+History
+![alt text](image-4.png)
