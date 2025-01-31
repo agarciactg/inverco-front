@@ -1,6 +1,5 @@
 import Dashboard from "layouts/dashboard";
 import Profile from "layouts/profile";
-import SignIn from "layouts/authentication/sign-in";
 import SignUp from "layouts/authentication/sign-up";
 
 // @mui icons
@@ -17,10 +16,10 @@ const routes_sidenav = [
   },
   {
     type: "collapse",
-    name: "Profile",
-    key: "profile",
+    name: "History",
+    key: "history",
     icon: <Icon fontSize="small">person</Icon>,
-    route: "/profile",
+    route: "/history",
     component: <Profile />,
   },
   {

@@ -19,10 +19,10 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Profile",
-    key: "profile",
+    name: "history",
+    key: "history",
     icon: <Icon fontSize="small">person</Icon>,
-    route: "/profile",
+    route: "/history",
     component: <PrivateRoute element={<Profile />} />,
   },
 
