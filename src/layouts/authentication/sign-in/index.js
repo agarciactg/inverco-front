@@ -86,7 +86,7 @@ function Basic() {
             <MDBox mb={2}>
               <MDInput
                 type="email"
-                label="Email"
+                label="Username"
                 fullWidth
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
