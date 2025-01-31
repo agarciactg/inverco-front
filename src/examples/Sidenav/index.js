@@ -50,11 +50,18 @@ function Sidenav({ color, brand, brandName, ...rest }) {
   });
 
   return (
-    <SidenavRoot {...rest} variant="permanent" ownerState={{ transparentSidenav, whiteSidenav, miniSidenav, darkMode }}>
+    <SidenavRoot
+      {...rest}
+      variant="permanent"
+      ownerState={{ transparentSidenav, whiteSidenav, miniSidenav, darkMode }}
+    >
       <MDBox pt={3} pb={1} px={4} textAlign="center">
         <MDBox component={NavLink} to="/" display="flex" alignItems="center">
           {brand && <MDBox component="img" src={brand} alt="Brand" width="2rem" />}
-          <MDBox width={!brandName && "100%"} sx={(theme) => sidenavLogoLabel(theme, { miniSidenav })}>
+          <MDBox
+            width={!brandName && "100%"}
+            sx={(theme) => sidenavLogoLabel(theme, { miniSidenav })}
+          >
             <MDTypography component="h6" variant="button" fontWeight="medium">
               InverColombia
             </MDTypography>

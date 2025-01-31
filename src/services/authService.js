@@ -3,7 +3,7 @@ import api from "./api";
 // Iniciar sesión
 export const login = async (username, password) => {
   try {
-    const response = await api.post("/auth/token/", { username, password });    
+    const response = await api.post("/auth/token/", { username, password });
     localStorage.setItem("token", response.data.data.access);
     return response.data;
   } catch (error) {
